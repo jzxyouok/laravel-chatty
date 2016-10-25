@@ -82,9 +82,11 @@ class User extends Model implements AuthenticatableContract
     public function friendRequestsPending(){
         return $this->friendOf()->wherePivot('accepted', false)->get();
     }
+    //this shows an alert that a friend request has been sent and waiting to be accepted to the $user
     public function hasFriendRequestPending(User $user){
         return (bool) $this->friendRequestsPending()->where('id', $user->id)->count();
     }
+    //this shows the anchor tag to accept friend request
     public function hasFriendRequestReceived(User $user){
         return (bool) $this->friendRequests()->where('id', $user->id)->count();
     }

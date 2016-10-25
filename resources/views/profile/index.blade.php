@@ -10,7 +10,7 @@
           <p>{{ $user->getFirstNameOrUsername()}} hasn't posted anything yet.</p>
 
          @else
-<!--this shows the original user status-->
+<!--this shows the user status i.e the user profile we are viewing-->
          @foreach ($statuses as $status)
            <div class="media">
             <a class="pull-left" href="{{route('profile.index', [$status->user->username])}}"><img class="media-object" alt="{{$status->user->getNameOrUsername()}}" src="{{$status->user->getAvatarUrl()}}"></a>
@@ -45,7 +45,7 @@
             </div>
         </div>
         @endforeach
-        <!-- this ensures that only the user friends and the user can reply to the status-->
+        <!-- this ensures that the reply box is visible only if the person viwing the profile is friends with the owner of the profile or its the owner of the profile thats viewing the profile therefore can reply-->
         @if($authUserIsFriend || Auth::user()->id === $status->user->id)
          <form role="form" action="{{route('status.reply', ['statusId'=>$status->id])}}" method="post">
             <div class="form-group{{$errors->has("reply-{$status->id}") ? ' has-error': ''}}">
@@ -78,7 +78,7 @@
 	    	@elseif(Auth::user()->isFriendsWith($user))
 	    	<p>You and {{$user->getNameOrUsername()}} are friends.</p>
             <form action="{{ route('friend.delete', [$user->username]) }}" method="post">
-            <input type="submit" value="Delete friend" class="btn btn-primary">
+            <input type="submit" value="Delete friend" class="btn btn-danger">
             <input type="hidden" name="_token" value="{{ csrf_token()}}">
             </form>
 	    	 
@@ -86,7 +86,7 @@
 	    	<a href="{{ route('friend.add', ['username' => $user->username])}}" class="btn btn-primary">Add as friend</a>
 	    	@endif
 
-
+<!--outputtung the users friends -->
 
 	       <h4>{{$user->getFirstNameOrUsername()}}'s friends</h4>
 		       @if(!$user->friends()->count())

@@ -22,6 +22,7 @@ Class StatusController extends Controller{
 		$this->validate($request, [
 			"reply-{$statusId}"=> 'required|max:1000'], [
 			'required'=>  'The reply body is required.']);
+		//retrieve the status we want to reply to
 		$status = Status::notReply()->find($statusId);
 
 		if(!$status){
@@ -30,10 +31,11 @@ Class StatusController extends Controller{
 		if(!Auth::user()->isFriendsWith($status->user) && Auth::user()->id !== $status->user->id){
 			return redirect()->route('home');
 		}
+		//this creates the reply and bind it to the var $reply
 		$reply = Status::create([
 			'body'=> $request->input("reply-{$statusId}"),
 			])->user()->associate(Auth::user());
-
+        //this binds the replies to the status 
 		$status->replies()->save($reply);
 
 		return redirect()->back();
